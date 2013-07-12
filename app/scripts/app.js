@@ -3,6 +3,9 @@
   define(['jquery', 'sha1', 'codebird', 'typeahead'], function($) {
     'use strict';
     var getVerse;
+    $.fn.center = function() {
+      return this.css("margin-left", -($(this).outerWidth() / 2));
+    };
     if (!String.linkify) {
       String.prototype.linkify = function() {
         var emailAddressPattern, pseudoUrlPattern, urlPattern;
@@ -36,25 +39,25 @@
     };
     return $(document).ready(function() {
       var today;
-      $.fn.center = function() {
-        return this.css("margin-left", -($(this).outerWidth() / 2));
-      };
       $(window).resize(function() {
         return $(".hero").center();
       });
       $(".hero").center();
-      $('input[name="q"]').typeahead([
-        {
-          name: "Google",
-          remote: {
-            url: "http://google.com/complete/search?output=firefox&q=%QUERY",
-            dataType: "jsonp",
-            filter: function(parsedResponse) {
-              return parsedResponse[1];
-            }
+      $('input[name="q"]').on("typeahead:initialized", function() {
+        return console.log("typeahead initialized");
+      });
+      $('input[name="q"]').typeahead({
+        name: "Google",
+        remote: {
+          url: "http://google.com/complete/search?output=firefox&q=%QUERY",
+          dataType: "jsonp",
+          filter: function(parsedResponse) {
+            console.log("typeahead working");
+            return parsedResponse[1];
           }
         }
-      ]).focus();
+      });
+      $('input[name="q"]').focus();
       if (typeof Storage && localStorage.date) {
         today = new Date().getDate();
         if (localStorage.date < today) {

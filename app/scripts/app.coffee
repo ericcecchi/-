@@ -47,14 +47,19 @@ define ['jquery','sha1','codebird','typeahead'], ($)->
 
 		$(".hero").center()
 
-		$('input[name="q"]').focus().typeahead [
+		$('input[name="q"]').on "typeahead:initialized", ()->
+			console.log "typeahead initialized"
+
+		$('input[name="q"]').typeahead
 			name: "Google"
 			remote:
 				url: "http://google.com/complete/search?output=firefox&q=%QUERY"
 				dataType: "jsonp"
 				filter: (parsedResponse)->
+					console.log "typeahead working"
 					parsedResponse[1]
-		]
+
+		$('input[name="q"]').focus()
 
 		if typeof(Storage) and localStorage.date
 			today = new Date().getDate()
