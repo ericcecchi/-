@@ -1,6 +1,9 @@
 define ['jquery','sha1','codebird','typeahead'], ($)->
 	'use strict'
 
+	$.fn.center = ->
+		@css "margin-left", -($(this).outerWidth() / 2)
+
 	unless String.linkify
 		String::linkify = ->
 
@@ -39,22 +42,19 @@ define ['jquery','sha1','codebird','typeahead'], ($)->
 		)
 
 	$(document).ready ->
-		$.fn.center = ->
-			@css "margin-left", -($(this).outerWidth() / 2)
-
 		$(window).resize ->
 			$(".hero").center()
 
 		$(".hero").center()
 
-		$('input[name="q"]').typeahead([
+		$('input[name="q"]').focus().typeahead [
 			name: "Google"
 			remote:
 				url: "http://google.com/complete/search?output=firefox&q=%QUERY"
 				dataType: "jsonp"
 				filter: (parsedResponse)->
 					parsedResponse[1]
-		]).focus()
+		]
 
 		if typeof(Storage) and localStorage.date
 			today = new Date().getDate()
